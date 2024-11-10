@@ -76,15 +76,6 @@ class Agent:
         # 返回智能体的模型参数
         return sum(rewards), self.policy.state_dict()
 
-'''
-def generate_random_model(local_model):
-    """生成随机噪声模型，模拟拜占庭智能体上传噪声"""
-    random_model = {}
-    for name, param in local_model.items():
-        random_model[name] = torch.randn_like(param)  # 用随机噪声代替原模型参数
-    return random_model
-'''
-
 
 def generate_random_model(local_model):
     """生成根据原有参数范围的随机噪声模型，模拟拜占庭智能体上传噪声"""
@@ -149,7 +140,7 @@ def main(seed, episodes, model_save_path):
 
     agents_count = 5
     # 定义每个智能体的环境异构，改变杆子的长度
-    pole_lengths = [0.5, 0.6, 0.5, 0.4, 1.5]  # 每个智能体的杆子长度不同
+    pole_lengths = [0.5, 0.4, 0.3, 0.6, 0.7]  # 每个智能体的杆子长度不同
     envs = [make_custom_cartpole_env(pole_lengths[i], max_steps=500) for i in range(agents_count)]  # 使用自定义环境创建实例
 
     state_size = envs[0].observation_space.shape[0]
@@ -207,7 +198,7 @@ def main(seed, episodes, model_save_path):
             if agent.is_byzantine:
                 # 替换拜占庭智能体的本地模型为随机噪声
                 local_models[i] = generate_random_model(local_models[i])
-                print('Random Noise!!!')
+                print('RandomNoise!!!')
 
         # 使用FedAvg对模型参数进行聚合
         fed_avg_params(global_model, local_models, agents_count)
@@ -232,9 +223,11 @@ def main(seed, episodes, model_save_path):
             print(f"Episode {episode + 1}: Average Reward across seeds: {mean_reward}")
 
 
+
 if __name__ == "__main__":
     seed = 42
     episodes = 2000
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     model_save_path = f'E:/paperbymyself/1021byzantine/log/model_{timestamp}'
+    attack_mode = 'RandomNoise'
     main(seed, episodes, model_save_path)
