@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from policy import PolicyNetwork
 from custom_cartpole import make_custom_cartpole_env
-import torch.nn.functional as F
 
 # 创建全局模型
 global_model = None
@@ -140,7 +139,7 @@ def main(seed, episodes, model_save_path):
 
     agents_count = 5
     # 定义每个智能体的环境异构，改变杆子的长度
-    pole_lengths = [0.5, 0.4, 0.3, 0.6, 0.7]  # 每个智能体的杆子长度不同
+    pole_lengths = [0.5, 0.5, 0.5, 0.5, 1.8]  # 每个智能体的杆子长度不同
     envs = [make_custom_cartpole_env(pole_lengths[i], max_steps=500) for i in range(agents_count)]  # 使用自定义环境创建实例
 
     state_size = envs[0].observation_space.shape[0]
